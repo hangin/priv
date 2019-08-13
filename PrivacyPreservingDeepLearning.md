@@ -38,3 +38,6 @@ Recent results show that a noisy variant of stochastic gradient descent achieves
 
 randomized “dropout,” used to prevent overﬁtting, cal also strengthen the privacy guarantee in a simple 1-layer neural network
 
+
+
+test notes
