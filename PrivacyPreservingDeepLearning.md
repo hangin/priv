@@ -76,5 +76,5 @@ In selective SGD, the learner chooses a fraction of parameters to be updated at 
 
 This selection can be completely random, but a smart strategy is to select the parameters whose current values are farther away from their local optima, i.e., those that have a larger gradient. 
 
-We refer to the ratio of θ over the total number of parameters as the parameter selection rate. 
+We refer to the ratio of θ over the total number of parameters as the ***parameter selection rate.*** 
 
