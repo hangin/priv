@@ -78,3 +78,122 @@ This selection can be completely random, but a smart strategy is to select the p
 
 We refer to the ratio of θ over the total number of parameters as the ***parameter selection rate.*** 
 
+
+
+**Distributed collaborative learning**
+
+The server adds all gradients to the value of the corresponding parameter.
+
+Each participant downloads a subset of the parameters from the server and uses them to update his local model.
+
+The download criterion for a given parameter can be the frequency or recency of updates or the moving average of gradients added to that parameter. 
+
+
+
+###### System Architecture
+
+**overview**
+
+We assume that there are N participants, each of which has a local private dataset available for training. 
+
+All participants agree in advance on a common network architecture and common learning objective.
+
+We assume the existence of a parameter server which is responsible for maintaining the latest values of parameters available to all parties. 
+
+**Local training**
+
+DSSGD is run independently by every participant and consists of **ﬁve steps** in each learning epoch:
+
+1. the participant downloads a $\theta_d$ fraction of parameters from the server and overwrites his local parameters with the downloaded values. 
+2. He then runs one epoch of SGD training on his local dataset. This training can be done on a sequence of mini-batches.
+3. In the third step, the participant computes $\Delta \mathbf w^{(i)}$, the vector of **changes** in all parameters in step 2.
+4. We assume that at most $\theta_u$ fraction of parameters can be selected for upload at each epoch. We consider two selection criteria. (1) ***largest values*** (2) ***random with threshold***
+5. Before uploading the selected gradients $\Delta \mathbf w^{(i)}$, their values are truncated in to the $[−γ,γ]$ range.
+
+**Parameter server**
+
+When someone uploads gradients, the server adds the uploaded $\Delta \mathbf w_j$ value to the corresponding global parameters and updates the meta-data and the update counter $stat_j $for each parameter j.
+
+To increase the weight of more recently updated parameters, the server can periodically multiply the counter by a decay factor β, i.e., stat := β · stat.
+
+**Why distributed selective SGD works**
+
+Some participants may undergo a higher number of updates, due to better computation and throughput capabilities. Some participants may fail to upload their selected parameters due to network errors or other failures. 
+
+Not only do race conditions not cripple our distributed SSGD, in fact they contribute to its success by increasing stochasticity. 
+
+Stochasticity due to asynchronous parameter update is known to be effective for training accurate deep neural networks.
+
+This is also consistent with regularizing techniques.
+
+
+
+**Parameter exchange protocol**
+
+With round robin
+
+With random order, but access to the server is atomic
+
+With asynchronous
+
+
+
+###### **Evaluation**
+
+
+
+**Privacy**
+
+1. all training data is revealed to a third party .
+2. data owners have no control over the learning objective.
+3. the learned model is not available directly to data owners.
+
+protect privacy of the training data, ensure public knowledge of the learning objective, and protect privacy of the data to which the learned model is applied, as well as privacy of the model’s output. 
+
+The scenarios we consider: a “passive” adversary model
+
+**Preventing direct leakage**
+
+**Preventing indirect leakage**
+
+Participants may indirectly reveal some information about their training datasets via public updates to a fraction of the neural-network parameters during training.
+
+
+
+In our case, f computes parameter gradients and selects which of them to share with other participants. 
+
+There are two sources of potential leakage: how gradients are selected for sharing and the actual values of the shared gradients
+
+To mitigate both types of leakage, we use the **sparse vector technique** to:
+
+1. randomly select a small subset of gradients whose values are above a threshold
+2. share perturbed values of the selected gradients
+
+
+
+In the following,we assume the same sensitivity $∆f$ for all parameters, but this is not a requirement, and different parameters may have different sensitivities.  ????
+
+
+
+**Estimating sensitivity**
+
+Estimating the true sensitivity of stochastic gradient descent is challenging.
+
+Instead,we modify the function so that its output stays within ﬁxed, input-independent bounds and use these bounds to estimate sensitivity. 
+
+We then (over-)estimate the sensitivity of our algorithm as 2γ and truncate the uploaded gradients into the [−γ,γ] range. 
+
+Limiting the range of values that parameters and gradients can take even improves the training process by helping to avoid overﬁtting. 
+
+Therefore, small values of γ (implying smaller sensitivity and thus smaller noise and higher accuracy) would inﬂuence the learning rate of the algorithm but not whether the optimal solution is achievable. 
+
+traverse through local optima. ???
+
+
+
+
+
+###### MY
+
+Privacy budget per parameter need to be set more than 10 to achieve high accuracy, so the total privacy budget will be extremely large. 
+
