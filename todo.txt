@@ -1,0 +1,11 @@
+Optimal schemes for discrete distribution estimation under locally differential privacy
+
+Hadamard response: Estimating distributions privately, effciently, and with little communication
+
+Practical locally private heavy hitters
+
+Heavy hitters and the structure of local privacy.
+
+Locally private hypothesis testing
+
+Minimax optimal procedures for locally private estimation
